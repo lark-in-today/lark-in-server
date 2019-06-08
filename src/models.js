@@ -13,3 +13,8 @@ const article = {
   content: 'xxxx',
   signature: 'xxxx',
 }
+
+module.exports = {
+  author,
+  article
+}
