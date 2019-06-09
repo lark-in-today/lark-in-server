@@ -1,27 +1,28 @@
-const OK = 'OK_00';
-const ERROR = 'ERROR_00';
-const WARNING = 'WARNING_00';
+(function(){
+  const Messager = {
+    OK: 'OK_00',
+    ERROR: 'ERROR_00',
+    WARNING: 'WARNING_00',
+  };
 
-const ok_code = [
-  'Created Token',
-];
+  // ok code here
+  Messager.__proto__.ok_code = [
+    'Created Token.',
+  ]
 
-// error code here
-const error_code = [
-  'Get Token Storage Failed',
-];
+  // error code here
+  Messager.__proto__.error_code = [
+    'No Public Key in Request Header.',
+  ];
 
-// warning code here
-const warning_code = [
-  'Generating Token...',
-];
+  // warning code here
+  Messager.__proto__.warning_code = [
+    'Generating Token...',
+  ];
 
-const ok = ok_code.map((e, i) => `${OK + i}: ${e}`);
-const error = error_code.map((e, i) => `${ERROR + i}: ${e}`);
-const warning = warning_code.map((e, i) => `${WARNING + i}: ${e}`);
-
-module.exports = {
-  ok,
-  error,
-  warning
-}
+  module.exports = {
+    ok: ok_code.map((e, i) => `${Messager.OK + i}: ${e}`),
+    error: error_code.map((e, i) => `${Messager.ERROR + i}: ${e}`),
+    warning: warning_code.map((e, i) => `${Messager.WARNING + i}: ${e}`)
+  }
+})();

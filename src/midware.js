@@ -9,51 +9,51 @@ const redis = new Redis();
  * @pk: public key
  * @sign: signature
  */
-async function auth(ctx, next) {
-  let headers = ctx.headers;
+class Middleware {
+  static async auth(ctx, next) {
+    let headers = ctx.headers;
 
-  let pk = headers['public-key-header'];
-  let token = headers['token-header'];
-  let stoken = headers['signed-token-header'];
+    let pk = headers['public-key-header'];
+    let token = headers['token-header'];
+    let stoken = headers['signed-token-header'];
 
-  let _stoken = await redis.get(pk);
+    let _stoken = await redis.get(pk);
 
-  if (stoken === '') {
-    let token = await crypto.randomBytes(64);
-    token = utils.encodeBase64(token);
+    if (pk === undefined || pk === '') {
+      ctx.status = 401;
+      ctx.body = {
+	msg: msg.error[0]
+      }
+    } else if (stoken === undefined || stoken === '') {
+      let token = await crypto.randomBytes(64);
+      token = utils.encodeBase64(token);
 
-    ctx.status = 202;
-    ctx.body = {
-      token: token,
-      msg: msg.warning[0]
-    };
-  } else if (stoken === _stoken) {
-    next();
-  } else {
-    let result = utils.Ed25519.verify(
-      utils.decodeBase64(token),
-      utils.decodeBase64(stoken),
-      utils.decodeBase64(pk)
-    );
+      ctx.status = 202;
+      ctx.body = {
+	token: token,
+	msg: msg.warning[0]
+      };
+    } else if (stoken === _stoken) {
+      next();
+    } else {
+      let result = utils.Ed25519.verify(
+	utils.decodeBase64(token),
+	utils.decodeBase64(stoken),
+	utils.decodeBase64(pk)
+      );
 
-    await redis.set(pk, stoken)
+      await redis.set(pk, stoken)
 
-    ctx.status = 201;
-    ctx.body = {
-      msg: msg.ok[0]
+      ctx.status = 201;
+      ctx.body = {
+	msg: msg.ok[0]
+      }
     }
   }
 }
 
 async function midware(ctx, next) {
-  let method = ctx.request.method;
-  let body = ctx.request.body;
-  let query = ctx.query;
-  let params = ctx.params;
-  let headers = ctx.headers;
-  // console.log(headers);
-  await auth(ctx, next)
-  // next()
+  await Middleware.auth(ctx, next)
 }
 
 module.exports = midware;

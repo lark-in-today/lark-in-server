@@ -6,11 +6,13 @@ const author = {
   public: false,
 }
 
-const article = {
-  ad: 'x',
-  author: 'x',
-  title: 'xxx',
-  content: 'xxxx',
+const art = {
+  ref: '',
+  thumbnail: '',
+  summary: '',
+  author: '',
+  title: '',
+  content: '',
   signature: 'xxxx',
 }
 

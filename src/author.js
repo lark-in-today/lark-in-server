@@ -1,6 +1,10 @@
 const r = require('rethinkdb');
 const utils = require('./utils');
 
+class Author {
+  
+}
+
 /** author
  * @params: ctx
  */
@@ -16,10 +20,16 @@ module.exports = async function author(ctx) {
       ctx.body = {msg: 'hello'}
       break;
     case 'PUT':
-      ctx.body = 'put';
+      ctx.body = {msg: 'put'};
+      break;
+    case 'POST':
+      ctx.body = {msg: 'post'};
+      break;
+    case 'DELETE':
+      ctx.body = {msg: 'delete'};
       break;
     default:
-      ctx.body = 'hello';
+      ctx.body = {msg: method};
       break;
   }
   return;
