@@ -5,8 +5,8 @@ class Redis {
     this.redis = new IoRedis()
   }
   
-  set(k, v) { this.redis.set(k, v) }
-  get(k, cb) { this.redis.get(k, cb) }
+  async set(k, v) { this.redis.set(k, v) }
+  async get(k, cb) { this.redis.get(k, cb) }
 }
 
 module.exports = Redis;

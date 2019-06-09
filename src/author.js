@@ -9,8 +9,12 @@ module.exports = async function author(ctx) {
   let body = ctx.request.body;
   let query = ctx.query;
   let params = ctx.params;
+  let headers = ctx.headers;
   
   switch(method) {
+    case 'GET':
+      ctx.body = {msg: 'hello'}
+      break;
     case 'PUT':
       ctx.body = 'put';
       break;

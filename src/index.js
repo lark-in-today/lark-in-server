@@ -5,16 +5,20 @@ const bodyparser = require('koa-bodyparser');
 
 const author = require('./author');
 const article = require('./article');
+const midware = require('./midware');
 /** router
  * @return: Router
  */
 function router() {
   let r = new Router();
 
-  return r
+  r
+    .use(midware)
     .get('/', ctx => { ctx.body = 'hello, world'; })
     .all('/:ident', author)
     .all('/:ident/:no', article);
+  
+  return r;
 }
 
 /** server 
