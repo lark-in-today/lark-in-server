@@ -1,3 +1,6 @@
 module.exports = {
-  db: 'lark'
+  rethinkdb: {
+    db: 'lark',
+    tables: ['author', 'art']
+  }
 }

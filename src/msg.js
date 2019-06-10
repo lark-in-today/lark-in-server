@@ -1,6 +1,6 @@
 // TODO: serialize
 (function(){
-  let MSG = [
+  const MSG = [
     /* Token Code - 00 */
     [[
       [201, 'Created Token.'],
@@ -11,7 +11,7 @@
     ]],
     /* Art Code - 01 */
     [[
-      [200, 'Created Art.'],
+      [202, 'Created Art.'],
     ],[
       [406, 'Art without title'],
       [406, 'Art without content'],
@@ -21,7 +21,6 @@
     ]],
   ]
 
-  let messager = [];
   module.exports = MSG.map((e, i) => {
     let cate = '';
     if (('' + i).length < 2) {

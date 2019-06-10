@@ -7,20 +7,26 @@ class Author {
   static post(ctx, next) {
     let data = ctx.request.body;
 
-    if (!data.content) {
-      ctx.status = 406;
-      ctx.body = {
-	msg: msg.error[1]
-      }
+    if (!data.title) {
+      ctx.status = msg[1][1][0][0];
+      ctx.body = { err_msg: msg[1][1][0][1] };
+      return;
+    } else if(!data.content) {
+      ctx.status = msg[1][1][1][0];
+      ctx.body = { err_msg: msg[1][1][1][1] };
+      return;
+    } else if(!data.summary) {
+      ctx.status = msg[1][1][2][0];
+      ctx.body = { err_msg: msg[1][1][2][1] };
+      return;
     }
     
     data.checksum = sha256(data.content);
     data.timestamp = Math.floor(new Date().getTime() / 1000);
 
-    ctx.body = {
-      msg: 'post',
-      ...data
-    };
+    ctx.status = msg[1][0][0][0];
+    ctx.body = { msg: msg[1][0][0][1] };
+    return;
   }
 }
 

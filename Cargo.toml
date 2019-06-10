@@ -1,0 +1,20 @@
+[[bin]]
+name = 'sled-server'
+path = 'src/.sled/bin/sled.rs'
+
+[lib]
+path = 'src/.sled/lib.rs'
+
+[package]
+name = "sled-server"
+version = "0.1.0"
+authors = ["clearloop <udtrokia@gmail.com>"]
+edition = "2018"
+publish = false
+
+[dependencies]
+ws = "0.8.1"
+sled = "0.24.1"
+actix = "0.8.3"
+futures = "0.1.27"
+actix-rt = "0.2.2"
