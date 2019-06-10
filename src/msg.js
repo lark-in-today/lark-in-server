@@ -1,28 +1,45 @@
+// TODO: serialize
 (function(){
-  const Messager = {
-    OK: 'OK_00',
-    ERROR: 'ERROR_00',
-    WARNING: 'WARNING_00',
-  };
-
-  // ok code here
-  Messager.__proto__.ok_code = [
-    'Created Token.',
+  let MSG = [
+    /* Token Code - 00 */
+    [[
+      [201, 'Created Token.'],
+    ], [
+      [401, 'No Public Key in Request Header.'],
+    ], [
+      [202, 'Generated Token.'],
+    ]],
+    /* Art Code - 01 */
+    [[
+      [200, 'Created Art.'],
+    ],[
+      [406, 'Art without title'],
+      [406, 'Art without content'],
+      [406, 'Art without summary'],
+    ],[
+      [202, '...'],
+    ]],
   ]
 
-  // error code here
-  Messager.__proto__.error_code = [
-    'No Public Key in Request Header.',
-  ];
-
-  // warning code here
-  Messager.__proto__.warning_code = [
-    'Generating Token...',
-  ];
-
-  module.exports = {
-    ok: ok_code.map((e, i) => `${Messager.OK + i}: ${e}`),
-    error: error_code.map((e, i) => `${Messager.ERROR + i}: ${e}`),
-    warning: warning_code.map((e, i) => `${Messager.WARNING + i}: ${e}`)
-  }
+  let messager = [];
+  module.exports = MSG.map((e, i) => {
+    let cate = '';
+    if (('' + i).length < 2) {
+      for (let l =0; l < (2 - ('' + i).length); l++) { cate += '0' }
+    }
+    cate += i;
+    return e.map((m, p) => {
+      return m.map((n, q) => {
+	let _prefix = 'OK';
+	if (p === 1) {
+	  _prefix = 'ERROR'
+	} else if (p === 2) {
+	  _prefix = 'WARNING'
+	}
+	
+	n[1] = `${_prefix}_${cate + q}: ` + n[1];
+	return n;
+      })
+    });
+  });
 })();

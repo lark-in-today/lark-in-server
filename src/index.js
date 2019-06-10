@@ -28,7 +28,7 @@ class Index {
    * @return: ()
    */
   static server(r) {
-    let server = new Koa();
+    const server = new Koa();
     console.log('Server listen to 6006...');
 
     server
