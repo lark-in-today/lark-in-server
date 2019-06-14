@@ -1,52 +1,46 @@
-use actix::prelude::*;
-use actix_rt::spawn;
-use futures::Future;
+use jsonrpc_core::*;
+use jsonrpc_http_server::*;
+use sled::Db;
+use serde_json::Map;
 
-/// Define `Ping` message
-struct Ping(usize);
+fn main() {
+    let mut io = IoHandler::new();
+    io.add_method("x", |p: Params| {
+        let d: Map<String, Value> = p.parse().unwrap();
+        let db = d.get("db").unwrap().as_str().unwrap();
+        let key = d.get("key").unwrap().as_str().unwrap();
+        let value =  d.get("value");
+        let t = Db::start_default(db).unwrap();
+        t.flush().unwrap();
+        
+        if value.is_some() {
+            match t.set(
+                key.as_bytes(),
+                value.unwrap().as_str().unwrap().as_bytes()
+            ).is_ok() {
+                true => Ok(Value::String("OK".to_string())),
+                false => Ok(Value::String("ERROR".to_string()))
+            }
+        } else {
+            let data = t.get(key.as_bytes()).unwrap();
 
-impl Message for Ping {
-    type Result = usize;
-}
+            match data.is_some() {
+                true => {
+                    Ok(Value::String(
+                        String::from_utf8(data.unwrap().to_vec()
+                        ).unwrap()))
+                },
+                false => {
+                    Ok(Value::String("Err".to_string()))
+                }
+            }
+        }
+    });
 
-/// Actor
-struct MyActor {
-    count: usize,
-}
+    println!("server start at 3030...");
+    let _server = ServerBuilder::new(io)
+	.start_http(&"127.0.0.1:3030".parse().unwrap())
+	.expect("Unable to start RPC server");
 
-/// Declare actor and its context
-impl Actor for MyActor {
-    type Context = Context<Self>;
-}
-
-/// Handler for `Ping` message
-impl Handler<Ping> for MyActor {
-    type Result = usize;
-
-    fn handle(&mut self, msg: Ping, _: &mut Context<Self>) -> Self::Result {
-        self.count += msg.0;
-        self.count
-    }
-}
-
-fn main() -> std::io::Result<()> {
-    // start system, this is required step
-    System::run(|| {
-        // start new actor
-        let addr = MyActor { count: 10 }.start();
-
-        // send message and get future for result
-        let res = addr.send(Ping(10));
-
-        // handle() returns tokio handle
-        spawn(
-            res.map(|res| {
-                println!("RESULT: {}", res == 20);
-
-                // stop system and exit
-                System::current().stop();
-            })
-            .map_err(|_| ()),
-        );
-    })
+    _server.wait();
 }
