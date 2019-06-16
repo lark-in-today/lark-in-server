@@ -1,6 +1,7 @@
 const Koa = require('koa');
-const Router = require('koa-router');
+const cors = require('koa-cors');
 const logger = require('koa-logger');
+const Router = require('koa-router');
 const bodyparser = require('koa-bodyparser');
 
 const author = require('./author');
@@ -19,7 +20,7 @@ class Index {
       .get('/', ctx => { ctx.body = 'hello, world'; })
       .all('/:ident', author)
       .all('/:ident/:no', article);
-    
+
     return r;
   }
 
@@ -32,6 +33,7 @@ class Index {
     console.log('Server listen to 6006...');
 
     server
+      .use(cors())
       .use(logger())
       .use(bodyparser())
       .use(r.routes())

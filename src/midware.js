@@ -21,8 +21,8 @@ class Middleware {
 
     if (pk === undefined || pk === '') {
       // 401 - No Public Key in Request Header.
-      ctx.status = msg[0][0][1][0];
-      ctx.body = { err_msg: msg[0][0][1][1] };
+      ctx.status = msg[0][0][0][0];
+      ctx.body = { err_msg: msg[0][0][0][1] };
       return;
       
     } else if (stoken === undefined || stoken === '') {

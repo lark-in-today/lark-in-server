@@ -15,14 +15,7 @@ publish = false
 [dependencies]
 ws = "0.8.1"
 sled = "0.24.1"
+daemonize = "0.4.1"
 serde_json = "1.0.39"
 jsonrpc-core = "12.0.0"
 jsonrpc-http-server = "12.0.0"
-
-[[example]]
-name = "ws_server"
-path = "src/.sled/examples/ws_server.rs"
-
-[[example]]
-name = "ws_client"
-path = "src/.sled/examples/ws_client.rs"

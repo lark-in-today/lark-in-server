@@ -1,4 +1,3 @@
-const r = require('rethinkdb');
 const msg = require('./msg');
 const utils = require('./utils');
 const sha256 = require('js-sha256').sha256;
@@ -24,6 +23,8 @@ class Author {
     data.checksum = sha256(data.content);
     data.timestamp = Math.floor(new Date().getTime() / 1000);
 
+    console.log(data);
+    
     ctx.status = msg[1][0][0][0];
     ctx.body = { msg: msg[1][0][0][1] };
     return;

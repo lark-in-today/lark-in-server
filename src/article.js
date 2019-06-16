@@ -3,6 +3,6 @@
  */
 module.exports = function article(ctx) {
   let method = ctx.request.method;
-  ctx.body = 'hello';
+  ctx.body = { msg: 'hello'};
   return;
 }

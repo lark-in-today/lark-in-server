@@ -1,7 +1,9 @@
+use std::fs::File;
 use jsonrpc_core::*;
 use jsonrpc_http_server::*;
 use sled::Db;
 use serde_json::Map;
+use daemonize::Daemonize;
 
 fn main() {
     let mut io = IoHandler::new();
@@ -43,4 +45,23 @@ fn main() {
 	.expect("Unable to start RPC server");
 
     _server.wait();
+    
+    let stdout = File::create("/tmp/daemon.out").unwrap();
+    let stderr = File::create("/tmp/daemon.err").unwrap();
+    let daemonize = Daemonize::new()
+        .pid_file("/tmp/lark-in.pid")
+        .chown_pid_file(true)
+        .working_directory("/tmp")
+        .user("nobody")
+        .group("daemon")
+        .group(2)
+        .umask(0o777)
+        .stdout(stdout)
+        .stderr(stderr)
+        .privileged_action(|| "drop privileged");
+
+    match daemonize.start() {
+        Ok(_) => println!("Success, daemonized"),
+        Err(e) => eprintln!("Error, {}", e),
+    }
 }
