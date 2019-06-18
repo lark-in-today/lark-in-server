@@ -7,16 +7,16 @@ class Author {
     let data = ctx.request.body;
 
     if (!data.title) {
-      ctx.status = msg[1][1][0][0];
-      ctx.body = { err_msg: msg[1][1][0][1] };
+      ctx.status = msg[2][1][0][0];
+      ctx.body = { err_msg: msg[2][1][0][1] };
       return;
     } else if(!data.content) {
-      ctx.status = msg[1][1][1][0];
-      ctx.body = { err_msg: msg[1][1][1][1] };
+      ctx.status = msg[2][1][1][0];
+      ctx.body = { err_msg: msg[2][1][1][1] };
       return;
     } else if(!data.summary) {
-      ctx.status = msg[1][1][2][0];
-      ctx.body = { err_msg: msg[1][1][2][1] };
+      ctx.status = msg[2][1][2][0];
+      ctx.body = { err_msg: msg[2][1][2][1] };
       return;
     }
     
@@ -34,7 +34,7 @@ class Author {
 /** author
  * @params: ctx
  */
-module.exports = async function author(ctx) {
+module.exports = async function (ctx) {
   // let body = ctx.request.body;
   // let query = ctx.query;
   // let params = ctx.params;

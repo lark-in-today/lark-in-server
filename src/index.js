@@ -6,6 +6,7 @@ const bodyparser = require('koa-bodyparser');
 
 const author = require('./author');
 const article = require('./article');
+const exist = require('./exist');
 const midware = require('./midware');
 
 class Index {
@@ -18,6 +19,7 @@ class Index {
     r
       .use(midware)
       .get('/', ctx => { ctx.body = 'hello, world'; })
+      .all('/_/exist', exist)
       .all('/:ident', author)
       .all('/:ident/:no', article);
 

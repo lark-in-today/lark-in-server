@@ -1,5 +1,5 @@
 // TODO: serialize
-(function(){
+;(function(){
   const MSG = [
     /* Token Code - 00 */
     [[
@@ -9,7 +9,15 @@
     ], [
       [202, 'Generated Token.'],
     ]],
-    /* Art Code - 01 */
+    /* Author Code - 01 */
+    [[
+      [200, 'Author doesnt exist'],
+    ], [
+      [],
+    ], [
+      [202, 'Author exist'],
+    ]],
+    /* Art Code - 02 */
     [[
       [202, 'Created Art.'],
     ],[
