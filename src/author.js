@@ -1,32 +1,27 @@
 const msg = require('./msg');
 const utils = require('./utils');
+const sled = require('./sled');
 const sha256 = require('js-sha256').sha256;
 
 class Author {
-  static post(ctx, next) {
+  static async post(ctx, next) {
     let data = ctx.request.body;
-
+    
     if (!data.title) {
-      ctx.status = msg[2][1][0][0];
-      ctx.body = { err_msg: msg[2][1][0][1] };
+      ctx.status = msg.art.error[0][0];
+      ctx.body = { err_msg: msg.art.error[0][1] };
       return;
     } else if(!data.content) {
-      ctx.status = msg[2][1][1][0];
-      ctx.body = { err_msg: msg[2][1][1][1] };
-      return;
-    } else if(!data.summary) {
-      ctx.status = msg[2][1][2][0];
-      ctx.body = { err_msg: msg[2][1][2][1] };
+      ctx.status = msg.art.error[1][0];
+      ctx.body = { err_msg: msg.art.error[1][1] };
       return;
     }
     
     data.checksum = sha256(data.content);
     data.timestamp = Math.floor(new Date().getTime() / 1000);
-
-    console.log(data);
     
-    ctx.status = msg[1][0][0][0];
-    ctx.body = { msg: msg[1][0][0][1] };
+    ctx.status = msg.art.ok[0][0];
+    ctx.body = { msg: msg.art.ok[0][1] };
     return;
   }
 }

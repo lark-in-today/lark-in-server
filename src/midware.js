@@ -16,21 +16,21 @@ class Middleware {
     let pk = headers['public-key-header'];
     let token = headers['token-header'];
     let stoken = headers['signed-token-header'];
-
     let _stoken = await redis.get(pk);
 
     if (pk === undefined || pk === '') {
       // 401 - No Public Key in Request Header.
-      ctx.status = msg[0][0][0][0];
-      ctx.body = { err_msg: msg[0][0][0][1] };
+      console.log(pk);
+      ctx.status = msg.token.error[0][0];
+      ctx.body = { err_msg: msg.token.error[0][1] };
       return;
       
     } else if (stoken === undefined || stoken === '') {
       // 202 - Generated Token.
       let token = await crypto.randomBytes(64);
       token = utils.encodeBase64(token);
-      ctx.status = msg[0][2][0][0];
-      ctx.body = { token: token, msg: msg[0][2][0][1] };
+      ctx.status = msg.token.warning[0][0];
+      ctx.body = { token: token, msg: msg.token.warning[0][1] };
       return;
       
     } else if (stoken === _stoken) {
@@ -46,8 +46,8 @@ class Middleware {
     );
 
     await redis.set(pk, stoken);
-    ctx.status = msg[0][0][0][0];
-    ctx.body = { msg: msg[0][0][0][1] };
+    ctx.status = msg.token.ok[0][0];
+    ctx.body = { msg: msg.token.ok[0][1] };
     return;
   }
 }

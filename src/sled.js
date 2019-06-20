@@ -15,4 +15,4 @@ module.exports = function (db, key, value) {
       "id": 1
     }
   });
-}
+};

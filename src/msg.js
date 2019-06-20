@@ -9,15 +9,7 @@
     ], [
       [202, 'Generated Token.'],
     ]],
-    /* Author Code - 01 */
-    [[
-      [200, 'Author doesnt exist'],
-    ], [
-      [],
-    ], [
-      [202, 'Author exist'],
-    ]],
-    /* Art Code - 02 */
+    /* Art Code - 01 */
     [[
       [202, 'Created Art.'],
     ],[
@@ -29,7 +21,7 @@
     ]],
   ]
 
-  module.exports = MSG.map((e, i) => {
+  const msgs = MSG.map((e, i) => {
     let cate = '';
     if (('' + i).length < 2) {
       for (let l =0; l < (2 - ('' + i).length); l++) { cate += '0' }
@@ -49,4 +41,18 @@
       })
     });
   });
+
+  module.exports = (function() {
+    let idents = ['token', 'art'];
+    let msgObj = {};
+
+    idents.map((e, i) => {
+      msgObj[e] = {};
+      msgObj[e]['ok'] = msgs[i][0];
+      msgObj[e]['error'] = msgs[i][1];
+      msgObj[e]['warning'] = msgs[i][2];
+    });
+
+    return msgObj;
+  })();
 })();
