@@ -1,20 +1,28 @@
-use std::fs::File;
 use jsonrpc_core::*;
 use jsonrpc_http_server::*;
 use sled::Db;
 use serde_json::Map;
-use daemonize::Daemonize;
 
 fn main() {
     let mut io = IoHandler::new();
     io.add_method("x", |p: Params| {
         let d: Map<String, Value> = p.parse().unwrap();
         let db = d.get("db").unwrap().as_str().unwrap();
-        let key = d.get("key").unwrap().as_str().unwrap();
-        let value =  d.get("value");
         let t = Db::start_default(db).unwrap();
-        t.flush().unwrap();
         
+        let _key = d.get("key");
+        let value =  d.get("value");
+
+        let key: String;
+        if _key.is_some() {
+            key = _key.unwrap().as_str().unwrap().to_string();
+        } else {
+            key = String::from_utf8(
+                (t.len() + 1).to_be_bytes().to_vec()
+            ).unwrap();
+        }
+        
+        t.flush().unwrap();
         if value.is_some() {
             match t.set(
                 key.as_bytes(),
@@ -44,24 +52,5 @@ fn main() {
 	.start_http(&"127.0.0.1:3030".parse().unwrap())
 	.expect("Unable to start RPC server");
 
-    _server.wait();
-    
-    let stdout = File::create("/tmp/daemon.out").unwrap();
-    let stderr = File::create("/tmp/daemon.err").unwrap();
-    let daemonize = Daemonize::new()
-        .pid_file("/tmp/lark-in.pid")
-        .chown_pid_file(true)
-        .working_directory("/tmp")
-        .user("nobody")
-        .group("daemon")
-        .group(2)
-        .umask(0o777)
-        .stdout(stdout)
-        .stderr(stderr)
-        .privileged_action(|| "drop privileged");
-
-    match daemonize.start() {
-        Ok(_) => println!("Success, daemonized"),
-        Err(e) => eprintln!("Error, {}", e),
-    }
+    _server.wait();    
 }
