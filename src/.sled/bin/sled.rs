@@ -29,12 +29,33 @@ fn main() {
         // tree
         let db = Db::start_default(path).unwrap();
         let mut t: std::sync::Arc<sled::Tree>;
-        let tree = d.get("tree").unwrap().as_str();
+        let tree = d.get("tree");
 
         if tree.is_some() {
-            t = db.open_tree(tree.unwrap().as_bytes()).unwrap();
+            t = db.open_tree(
+                tree.unwrap().as_str().unwrap().as_bytes()
+            ).unwrap();
         } else {
             t = db.open_tree(b"default").unwrap();
+        }
+
+        // contents
+        let batch = d.get("batch");
+        if batch.is_some() {
+            match batch.unwrap().as_str().unwrap() {
+                "true" => {
+                    let mut values: Vec<Value> = vec![];
+                    for i in t.iter() {
+                        values.push(Value::String(
+                            String::from_utf8(i.unwrap().0).unwrap())
+                        );
+                    }
+                    return Ok(Value::Array(values))
+                },
+                _ => {
+                    return Ok(Value::String("BATCH ERROR".to_string()))
+                }
+            }
         }
 
         // key && value
@@ -75,11 +96,11 @@ fn main() {
             }
         }
     });
-
+    
     println!("server start at 3030...");
     let _server = ServerBuilder::new(io)
 	.start_http(&"127.0.0.1:3030".parse().unwrap())
 	.expect("Unable to start RPC server");
 
-    _server.wait();    
+    _server.wait(); 
 }
