@@ -15,7 +15,7 @@
     ],[
       [406, 'Art without title'],
       [406, 'Art without content'],
-      [406, 'Art without summary'],
+      [406, 'Server Error']
     ],[
       [202, '...'],
     ]],

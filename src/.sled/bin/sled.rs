@@ -3,16 +3,44 @@ use jsonrpc_http_server::*;
 use sled::Db;
 use serde_json::Map;
 
+/// # author
+/// db: author
+///   + tree: _
+///   + ...authors
+///
+/// # art
+/// db: art
+///   + tree: public_key
+///     + ...arts
+///
 fn main() {
     let mut io = IoHandler::new();
+
     io.add_method("x", |p: Params| {
+        // data
         let d: Map<String, Value> = p.parse().unwrap();
-        let db = d.get("db").unwrap().as_str().unwrap();
-        let t = Db::start_default(db).unwrap();
-        
+
+        // database
+        let db_name = d.get("db").unwrap().as_str().unwrap();
+        let mut path = dirs::home_dir().unwrap();
+        path = path.join(".lark_in");
+        path = path.join(db_name);
+
+        // tree
+        let db = Db::start_default(path).unwrap();
+        let mut t: std::sync::Arc<sled::Tree>;
+        let tree = d.get("tree").unwrap().as_str();
+
+        if tree.is_some() {
+            t = db.open_tree(tree.unwrap().as_bytes()).unwrap();
+        } else {
+            t = db.open_tree(b"default").unwrap();
+        }
+
+        // key && value
         let _key = d.get("key");
         let value =  d.get("value");
-
+        
         let key: String;
         if _key.is_some() {
             key = _key.unwrap().as_str().unwrap().to_string();
@@ -21,7 +49,8 @@ fn main() {
                 (t.len() + 1).to_be_bytes().to_vec()
             ).unwrap();
         }
-        
+
+        // storage
         t.flush().unwrap();
         if value.is_some() {
             match t.set(

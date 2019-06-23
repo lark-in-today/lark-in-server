@@ -16,13 +16,21 @@ class Author {
       ctx.body = { err_msg: msg.art.error[1][1] };
       return;
     }
-    
-    data.checksum = sha256(data.content);
+
+    // data.checksum = sha256(data.content);
     data.timestamp = Math.floor(new Date().getTime() / 1000);
+    let pk = ctx.headers['public-key-header'];
+    let res = await sled(pk, '', JSON.stringify(data));
     
-    ctx.status = msg.art.ok[0][0];
-    ctx.body = { msg: msg.art.ok[0][1] };
-    return;
+    if (res.data.result === 'OK') {
+      ctx.status = msg.art.ok[0][0];
+      ctx.body = { msg: msg.art.ok[0][1] };
+      return;
+    } else {
+      ctx.status = msg.art.error[2][0];
+      ctx.body = { err_msg: msg.art.error[2][1] };
+      return;
+    }
   }
 }
 
