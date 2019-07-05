@@ -13,7 +13,6 @@ class Ident:
         ret = r.get(f'{self.url}/{s}', headers=self.headers).text;
         return ret;
 
-    # Auth
     def put(self, data):
         s = 'hello'
         ret = r.put(f'{self.url}/{s}', data = data).text;

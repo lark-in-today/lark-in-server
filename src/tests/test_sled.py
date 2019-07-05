@@ -38,21 +38,6 @@ class SledSets:
         res = r.post('http://localhost:3030', data=json.dumps(data), headers=headers);
         print(res.text);
 
-    def test_insert_value():
-        data = {
-            "id": "1",
-            "method": "x",
-            "jsonrpc": "2.0",
-            "params": {
-                "db": "test_db",
-                "key": "test_key",
-                "value": "test_value"
-            }
-        }
-
-        res = r.post('http://localhost:3030', data=json.dumps(data), headers=headers);
-        print(res.text);
-
 # st = SledSets;
 # st.test_insert_kv();
 # st.test_insert_kv_in_tree();
