@@ -15,9 +15,10 @@
     ],[
       [406, 'Art without title'],
       [406, 'Art without content'],
-      [406, 'Server Error']
+      [406, 'Server Error'],      
+      [406, 'Post without author']
     ],[
-      [202, '...'],
+      [202, 'Public key and author doesnt pair'],
     ]],
   ]
 
