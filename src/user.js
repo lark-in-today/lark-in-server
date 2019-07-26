@@ -12,7 +12,8 @@ class User {
       username: body.username,
       password: body.password
     });
-    ctx.body = { msg: res };
+
+    ctx.body = res;
   }
   
   static async login(ctx, next) {
@@ -22,13 +23,13 @@ class User {
       password: body.password
     });
     
-    if (res === true) {
+    if (res.errMsg === 'ok') {
       let token = await crypto.randomBytes(64);
-      redis.set(body.username, token.toString('base64'));
-      ctx.set('auth', token.toString('base64'));
+      redis.set(token.toString('hex'), body.username);
+      ctx.set('auth', token.toString('hex'));
     }
-    
-    ctx.body = { msg: res };
+
+    ctx.body = res;
   }
 }
 

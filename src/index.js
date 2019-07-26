@@ -14,8 +14,8 @@ class Index {
       .get('/', ctx => {
 	ctx.body = 'hello, world';
       })
-      .post('/register', user.register)
-      .post('/login', user.login)
+      .post('/user/register', user.register)
+      .post('/user/login', user.login)
 
     return r;
   }

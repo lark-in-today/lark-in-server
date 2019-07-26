@@ -33,12 +33,23 @@ class User {
       username: username
     }).then(r => {
       if (r === true) {
-	return false;
+	return {
+	  errMsg: 'err'
+	}
       } else {
 	return u.create({
 	  username, password
 	}).then(r => {
-	  return r._id? true: false;
+	  if (r._id) {
+	    return {
+	      errMsg: 'ok',
+	      username: r.username
+	    }
+	  } else {
+	    return {
+	      errMsg: 'err'
+	    }
+	  }
 	})
       }
     });
@@ -52,9 +63,14 @@ class User {
       username: username
     }).then(r => {
       if (r.password === password) {
-	return true;
+	return {
+	  username: r.username,
+	  errMsg: 'ok'
+	};
       } else {
-	return false;
+	return {
+	  errMsg: 'err'
+	};
       }
     });
   }
