@@ -27,7 +27,10 @@ class Index {
       .get('/article/draft_thums', article.get_draft_thums)
       .post('/article', article.article)
       .post('/article/draft', article.draft)
-      
+      .put('/article', article.update_article)
+      .put('/article/draft', article.update_draft)
+      .delete('/article', article.delete_article)
+      .delete('/article/draft', article.delete_draft)
 
     return { basic: r, auth: r_auth };
   }
