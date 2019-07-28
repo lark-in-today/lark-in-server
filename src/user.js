@@ -26,7 +26,7 @@ class User {
     if (res.errMsg === 'ok') {
       let token = await crypto.randomBytes(64);
       redis.set(token.toString('hex'), body.username);
-      ctx.set('auth', token.toString('hex'));
+      ctx.set('token', token.toString('hex'));
     }
 
     ctx.body = res;

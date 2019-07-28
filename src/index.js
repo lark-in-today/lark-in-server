@@ -5,6 +5,8 @@ const Router = require('koa-router');
 const bodyparser = require('koa-body');
 
 const user = require('./user');
+const article = require('./article');
+const midware = require('./midware');
 
 class Index {
   static router() {
@@ -17,7 +19,17 @@ class Index {
       .post('/user/register', user.register)
       .post('/user/login', user.login)
 
-    return r;
+    let r_auth = new Router();
+    r_auth
+      .get('/article', article.get_article)
+      .get('/article_thums', article.get_article_thums)
+      .get('/article/draft', article.get_draft)
+      .get('/article/draft_thums', article.get_draft_thums)
+      .post('/article', article.article)
+      .post('/article/draft', article.draft)
+      
+
+    return { basic: r, auth: r_auth };
   }
 
   static server(r) {
@@ -28,8 +40,11 @@ class Index {
       .use(cors())
       .use(logger())
       .use(bodyparser())
-      .use(r.routes())
-      .use(r.allowedMethods())
+      .use(r.basic.routes())
+      .use(r.basic.allowedMethods())
+      .use(midware)
+      .use(r.auth.routes())
+      .use(r.auth.allowedMethods())
       .listen(6000);
   }
 

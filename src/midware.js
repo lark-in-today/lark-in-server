@@ -4,7 +4,16 @@ const redis = new Redis();
 class Middleware {
   static async auth(ctx, next) {
     let headers = ctx.headers;
-    return;
+    let user = await redis.get(headers.token);
+    if (user !== null) {
+      ctx.request.body.author = user;
+      await next();
+    } else {
+      ctx.body = {
+	errMsg: 'err',
+	extra: 'auth failed.'
+      };
+    }
   }
 }
 

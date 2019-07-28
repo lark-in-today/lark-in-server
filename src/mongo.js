@@ -6,6 +6,29 @@ mongoose.connect(
   }
 );
 
+class Article {
+  static schema() {
+    return new mongoose.Schema({
+      title: String,
+      content: String,
+      author: String
+    });
+  }
+
+  static article_model() {
+    return mongoose.model('article', Article.schema());
+  }
+
+  static draft_model() {
+    return mongoose.model('draft', Article.schema());
+  }
+
+  constructor() {
+    this.article = Article.article_model();
+    this.draft = Article.draft_model();
+  }
+}
+
 class User {
   static schema() {
     return new mongoose.Schema({
@@ -33,22 +56,15 @@ class User {
       username: username
     }).then(r => {
       if (r === true) {
-	return {
-	  errMsg: 'err'
-	}
+	return { errMsg: 'err' }
       } else {
 	return u.create({
 	  username, password
 	}).then(r => {
 	  if (r._id) {
-	    return {
-	      errMsg: 'ok',
-	      username: r.username
-	    }
+	    return { errMsg: 'ok', username: r.username }
 	  } else {
-	    return {
-	      errMsg: 'err'
-	    }
+	    return { errMsg: 'err' }
 	  }
 	})
       }
@@ -63,17 +79,14 @@ class User {
       username: username
     }).then(r => {
       if (r.password === password) {
-	return {
-	  username: r.username,
-	  errMsg: 'ok'
-	};
+	return { username: r.username, errMsg: 'ok' };
       } else {
-	return {
-	  errMsg: 'err'
-	};
+	return { errMsg: 'err' };
       }
     });
   }
 }
 
-module.exports = { User };
+module.exports = {
+  User, Article
+};
